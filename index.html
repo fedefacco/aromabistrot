@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aroma Bistrot</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --teal:#0d4a47;
+    --teal-mid:#1a5f5b;
+    --salmon:#e8956a;
+    --salmon-light:#f0b090;
+    --cream:#f5f0e8;
+    --dark:#0a1a18;
+    --text-muted:#7a9e9b;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--dark);color:var(--cream);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden}
+
+  /* ── NAV ── */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:background .4s}
+  nav.scrolled{background:rgba(10,26,24,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(232,149,106,.12)}
+  .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.35em;color:var(--salmon);text-transform:uppercase;text-decoration:none}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{color:rgba(245,240,232,.7);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:color .3s}
+  .nav-links a:hover{color:var(--salmon)}
+  .nav-cta{background:var(--salmon);color:var(--dark);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;padding:.6rem 1.5rem;text-decoration:none;transition:background .3s}
+  .nav-cta:hover{background:var(--salmon-light)}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+  .hamburger span{width:24px;height:1px;background:var(--cream);transition:all .3s}
+
+  /* ── HERO ── */
+  #hero{height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%, rgba(13,74,71,.8) 0%, var(--dark) 70%)}
+  .hero-pattern{position:absolute;inset:0;opacity:.06;background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(232,149,106,.3) 40px,rgba(232,149,106,.3) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(232,149,106,.3) 40px,rgba(232,149,106,.3) 41px)}
+  .hero-content{position:relative;text-align:center;z-index:2;padding:0 2rem}
+  .hero-eyebrow{font-size:.7rem;letter-spacing:.4em;color:var(--salmon);text-transform:uppercase;margin-bottom:2rem;opacity:0;animation:fadeUp .8s .3s forwards}
+  .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,12vw,9rem);font-weight:300;line-height:.9;color:var(--cream);opacity:0;animation:fadeUp .9s .5s forwards}
+  .hero-title em{font-style:italic;color:var(--salmon)}
+  .hero-subtitle{font-size:.8rem;letter-spacing:.3em;color:var(--text-muted);text-transform:uppercase;margin-top:1.5rem;opacity:0;animation:fadeUp .8s .7s forwards}
+  .hero-cta-group{margin-top:3.5rem;display:flex;gap:1.2rem;justify-content:center;opacity:0;animation:fadeUp .8s .9s forwards}
+  .btn-primary{background:var(--salmon);color:var(--dark);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;padding:.9rem 2.5rem;cursor:pointer;border:none;font-family:'Jost',sans-serif;transition:background .3s}
+  .btn-primary:hover{background:var(--salmon-light)}
+  .btn-outline{background:transparent;color:var(--cream);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;padding:.9rem 2.5rem;cursor:pointer;border:1px solid rgba(245,240,232,.3);font-family:'Jost',sans-serif;transition:all .3s}
+  .btn-outline:hover{border-color:var(--salmon);color:var(--salmon)}
+  .hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.6rem;opacity:.5}
+  .hero-scroll span{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase}
+  .scroll-line{width:1px;height:40px;background:linear-gradient(var(--cream),transparent);animation:scrollPulse 2s infinite}
+
+  /* ── STRIP ── */
+  .info-strip{background:var(--teal);padding:1.2rem 3rem;display:flex;justify-content:center;gap:4rem;border-top:1px solid rgba(232,149,106,.2);border-bottom:1px solid rgba(232,149,106,.2)}
+  .strip-item{text-align:center}
+  .strip-item .label{font-size:.6rem;letter-spacing:.25em;color:var(--salmon-light);text-transform:uppercase;margin-bottom:.3rem}
+  .strip-item .value{font-size:.82rem;letter-spacing:.1em}
+
+  /* ── SECTION BASE ── */
+  section{padding:7rem 3rem}
+  .section-tag{font-size:.65rem;letter-spacing:.35em;color:var(--salmon);text-transform:uppercase;margin-bottom:1.2rem;display:block}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.05;color:var(--cream)}
+  .section-title em{font-style:italic;color:var(--salmon-light)}
+
+  /* ── MENU ── */
+  #menu{background:var(--dark)}
+  .menu-inner{max-width:1100px;margin:0 auto}
+  .menu-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4rem;flex-wrap:wrap;gap:2rem}
+  .menu-tabs{display:flex;gap:0;border:1px solid rgba(245,240,232,.15);width:fit-content}
+  .tab{background:transparent;border:none;color:rgba(245,240,232,.45);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;padding:.65rem 1.5rem;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;border-right:1px solid rgba(245,240,232,.15)}
+  .tab:last-child{border-right:none}
+  .tab.active{background:var(--salmon);color:var(--dark)}
+  .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .menu-item{padding:1.8rem 0;border-bottom:1px solid rgba(245,240,232,.07);display:flex;justify-content:space-between;align-items:baseline;gap:1rem;cursor:default}
+  .menu-item:hover .menu-name{color:var(--salmon)}
+  .menu-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;transition:color .3s}
+  .menu-desc{font-size:.7rem;color:var(--text-muted);letter-spacing:.05em;margin-top:.3rem;font-style:italic}
+  .menu-price{font-size:.78rem;color:var(--salmon);letter-spacing:.1em;white-space:nowrap}
+  .menu-col{padding:0 2rem}
+  .menu-col:first-child{border-right:1px solid rgba(245,240,232,.07);padding-left:0}
+  .menu-col:last-child{padding-right:0}
+
+  /* ── ABOUT ── */
+  #about{background:var(--teal)}
+  .about-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+  .about-visual{position:relative}
+  .about-frame{aspect-ratio:3/4;background:rgba(10,26,24,.6);border:1px solid rgba(232,149,106,.2);position:relative;overflow:hidden}
+  .about-frame-inner{position:absolute;inset:1.5rem;background:rgba(13,74,71,.4);display:flex;align-items:center;justify-content:center}
+  .about-frame-text{font-family:'Cormorant Garamond',serif;font-size:clamp(5rem,10vw,8rem);color:rgba(232,149,106,.12);font-style:italic;line-height:1}
+  .about-tag-float{position:absolute;bottom:2rem;right:-2rem;background:var(--salmon);color:var(--dark);padding:1rem 1.5rem;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase}
+  .about-text p{color:rgba(245,240,232,.7);line-height:1.9;font-size:.9rem;margin-bottom:1.5rem}
+  .about-stats{display:flex;gap:3rem;margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(245,240,232,.12)}
+  .stat{text-align:center}
+  .stat-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--salmon);display:block}
+  .stat-label{font-size:.65rem;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase}
+
+  /* ── GALLERY ── */
+  #gallery{background:var(--dark);padding:7rem 0}
+  .gallery-header{padding:0 3rem;margin-bottom:3rem;display:flex;justify-content:space-between;align-items:flex-end}
+  .gallery-grid{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:200px 160px;gap:6px;padding:0 3rem}
+  .gallery-cell{background:var(--teal);position:relative;overflow:hidden;cursor:pointer}
+  .gallery-cell:first-child{grid-column:span 2;grid-row:span 2;background:rgba(13,74,71,.8)}
+  .gallery-cell:nth-child(3){background:rgba(25,60,58,.8)}
+  .gallery-cell:nth-child(4){background:rgba(20,70,60,.7)}
+  .gallery-cell-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .5s}
+  .gallery-cell:hover .gallery-cell-inner{transform:scale(1.05)}
+  .gallery-label{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2vw,1.5rem);font-style:italic;color:rgba(245,240,232,.3);pointer-events:none}
+  .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(10,26,24,.6),transparent);opacity:0;transition:opacity .4s}
+  .gallery-cell:hover .gallery-overlay{opacity:1}
+
+  /* ── CONTATTI ── */
+  #contatti{background:var(--teal)}
+  .contatti-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
+  .contatti-info .info-block{margin-bottom:2.5rem}
+  .info-block-label{font-size:.6rem;letter-spacing:.3em;color:var(--salmon);text-transform:uppercase;margin-bottom:.8rem;display:block}
+  .info-block-value{font-size:.9rem;line-height:1.8;color:rgba(245,240,232,.8)}
+  .contatti-form{display:flex;flex-direction:column;gap:1rem}
+  .form-group{display:flex;flex-direction:column;gap:.4rem}
+  .form-label{font-size:.62rem;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase}
+  .form-input{background:rgba(10,26,24,.5);border:1px solid rgba(245,240,232,.12);color:var(--cream);padding:.8rem 1rem;font-family:'Jost',sans-serif;font-size:.85rem;outline:none;transition:border-color .3s}
+  .form-input:focus{border-color:var(--salmon)}
+  .form-input::placeholder{color:rgba(245,240,232,.3)}
+  textarea.form-input{resize:none;height:100px}
+  .whatsapp-btn{display:inline-flex;align-items:center;gap:.7rem;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);color:rgba(245,240,232,.8);padding:.8rem 1.5rem;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;text-decoration:none;margin-top:1rem}
+  .whatsapp-btn:hover{background:rgba(37,211,102,.25);color:#fff}
+  .wa-dot{width:8px;height:8px;background:#25d366;border-radius:50%}
+
+  /* ── FOOTER ── */
+  footer{background:var(--dark);padding:3rem;border-top:1px solid rgba(245,240,232,.07)}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2rem}
+  .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--salmon);letter-spacing:.2em}
+  .footer-copy{font-size:.65rem;letter-spacing:.15em;color:var(--text-muted);text-transform:uppercase}
+  .footer-social{display:flex;gap:1.5rem}
+  .footer-social a{font-size:.65rem;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;text-decoration:none;transition:color .3s}
+  .footer-social a:hover{color:var(--salmon)}
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes scrollPulse{0%,100%{opacity:.5;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s,transform .7s}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* ── MOBILE ── */
+  @media(max-width:768px){
+    nav{padding:1.2rem 1.5rem}
+    .nav-links,.nav-cta{display:none}
+    .hamburger{display:flex}
+    section{padding:4rem 1.5rem}
+    .info-strip{gap:1.5rem;flex-wrap:wrap;padding:1rem 1.5rem}
+    .menu-grid{grid-template-columns:1fr}
+    .menu-col{padding:0;border-right:none!important}
+    .about-inner,.contatti-inner{grid-template-columns:1fr;gap:3rem}
+    .about-tag-float{right:0}
+    .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;padding:0 1.5rem}
+    .gallery-cell:first-child{grid-column:span 2;grid-row:span 1}
+    .gallery-header{padding:0 1.5rem}
+    .footer-inner{flex-direction:column;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a href="#hero" class="nav-logo">Aroma Bistrot</a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#about">Chi Siamo</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contatti">Contatti</a></li>
+  </ul>
+  <a href="#contatti" class="nav-cta">Prenota</a>
+  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+
+  <!-- Logo Aroma come SVG inline derivato dalle proporzioni reali del brand -->
+  <div class="hero-content">
+    <span class="hero-eyebrow">Offanengo · Dal 2024</span>
+
+    <!-- SVG Logo fedele al brand -->
+    <div style="margin:0 auto 1.5rem;width:clamp(220px,50vw,360px);opacity:0;animation:fadeUp .9s .4s forwards">
+      <svg viewBox="0 0 460 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <rect width="460" height="220" rx="6" fill="#0d4a47"/>
+        <!-- AROMA lettering handcrafted to match brand rounded style -->
+        <text x="230" y="138" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-size="96" font-weight="300" fill="#e8956a" letter-spacing="8">AROMA</text>
+        <text x="230" y="172" text-anchor="middle" font-family="'Jost',sans-serif" font-size="18" font-weight="300" fill="#c8785a" letter-spacing="18">BISTROT</text>
+        <!-- decorative tails on A -->
+        <line x1="52" y1="152" x2="42" y2="162" stroke="#e8956a" stroke-width="4" stroke-linecap="round"/>
+        <line x1="390" y1="152" x2="400" y2="162" stroke="#e8956a" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <p class="hero-subtitle">Cucina contemporanea · Cocktail d'autore</p>
+    <div class="hero-cta-group">
+      <button class="btn-primary" onclick="document.getElementById('contatti').scrollIntoView({behavior:'smooth'})">Prenota un Tavolo</button>
+      <button class="btn-outline" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">Scopri il Menu</button>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scorri</span>
+  </div>
+</section>
+
+<div class="info-strip">
+  <div class="strip-item">
+    <div class="label">Orari</div>
+    <div class="value">Mar–Dom · 12:00–15:00 / 19:00–23:30</div>
+  </div>
+  <div class="strip-item">
+    <div class="label">Dove</div>
+    <div class="value">Offanengo, Cremona</div>
+  </div>
+  <div class="strip-item">
+    <div class="label">Prenota</div>
+    <div class="value">+39 000 000 0000</div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="menu-inner">
+    <div class="menu-header reveal">
+      <div>
+        <span class="section-tag">A Tavola</span>
+        <h2 class="section-title">Il Nostro<br><em>Menu</em></h2>
+      </div>
+      <div class="menu-tabs">
+        <button class="tab active" onclick="switchTab('piatti',this)">Piatti</button>
+        <button class="tab" onclick="switchTab('cocktail',this)">Cocktail</button>
+        <button class="tab" onclick="switchTab('vini',this)">Vini</button>
+      </div>
+    </div>
+    <div class="menu-grid reveal">
+      <div class="menu-col" id="col-left"></div>
+      <div class="menu-col" id="col-right"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHI SIAMO -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-visual reveal">
+      <div class="about-frame">
+        <div class="about-frame-inner">
+          <div class="about-frame-text">A</div>
+        </div>
+      </div>
+      <div class="about-tag-float">Est. 2024</div>
+    </div>
+    <div class="about-text reveal">
+      <span class="section-tag">La Nostra Storia</span>
+      <h2 class="section-title" style="margin-bottom:2rem">Un <em>Bistrot</em><br>Contemporaneo</h2>
+      <p>Aroma Bistrot nasce dalla passione per la cucina autentica e per il design. Un luogo dove ogni piatto è un racconto, ogni serata un'esperienza da ricordare.</p>
+      <p>La nostra filosofia unisce ingredienti selezionati del territorio con tecniche contemporanee, in un ambiente curato nei minimi dettagli. Non un semplice ristorante, ma uno stile di vita.</p>
+      <div class="about-stats">
+        <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Ingredienti Locali</span></div>
+        <div class="stat"><span class="stat-num">40+</span><span class="stat-label">Etichette Vino</span></div>
+        <div class="stat"><span class="stat-num">30+</span><span class="stat-label">Cocktail d'Autore</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" style="padding:7rem 0">
+  <div class="gallery-header reveal">
+    <div>
+      <span class="section-tag">Atmosfera</span>
+      <h2 class="section-title">Immagini<br><em>dal Locale</em></h2>
+    </div>
+    <a href="#" style="font-size:.68rem;letter-spacing:.2em;color:var(--salmon);text-transform:uppercase;text-decoration:none">Instagram →</a>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-cell"><div class="gallery-cell-inner"><span class="gallery-label">Sala</span></div><div class="gallery-overlay"></div></div>
+    <div class="gallery-cell"><div class="gallery-cell-inner"><span class="gallery-label">Cucina</span></div><div class="gallery-overlay"></div></div>
+    <div class="gallery-cell"><div class="gallery-cell-inner"><span class="gallery-label">Food</span></div><div class="gallery-overlay"></div></div>
+    <div class="gallery-cell"><div class="gallery-cell-inner"><span class="gallery-label">Cocktail</span></div><div class="gallery-overlay"></div></div>
+    <div class="gallery-cell"><div class="gallery-cell-inner"><span class="gallery-label">Esterni</span></div><div class="gallery-overlay"></div></div>
+  </div>
+</section>
+
+<!-- CONTATTI -->
+<section id="contatti">
+  <div class="contatti-inner">
+    <div class="contatti-info reveal">
+      <span class="section-tag">Vieni a Trovarci</span>
+      <h2 class="section-title" style="margin-bottom:2.5rem"><em>Prenota</em><br>il tuo Tavolo</h2>
+      <div class="info-block">
+        <span class="info-block-label">Indirizzo</span>
+        <div class="info-block-value">Via _________, Offanengo (CR)</div>
+      </div>
+      <div class="info-block">
+        <span class="info-block-label">Orari di Apertura</span>
+        <div class="info-block-value">Martedì – Domenica<br>Pranzo: 12:00 – 15:00<br>Cena: 19:00 – 23:30<br><span style="color:var(--text-muted);font-size:.8rem">Lunedì chiuso</span></div>
+      </div>
+      <div class="info-block">
+        <span class="info-block-label">Contatti</span>
+        <div class="info-block-value">+39 000 000 0000<br>info@aromabistrot.it</div>
+      </div>
+      <a href="#" class="whatsapp-btn"><div class="wa-dot"></div>Scrivici su WhatsApp</a>
+    </div>
+    <div class="reveal">
+      <span class="section-tag">Modulo Prenotazione</span>
+      <div class="contatti-form" style="margin-top:1.2rem">
+        <div class="form-group">
+          <label class="form-label">Nome e Cognome</label>
+          <input class="form-input" type="text" placeholder="Mario Rossi">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label class="form-label">Data</label>
+            <input class="form-input" type="date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ora</label>
+            <select class="form-input" style="appearance:none;cursor:pointer">
+              <option>Pranzo 12:00</option>
+              <option>Pranzo 13:00</option>
+              <option>Cena 19:30</option>
+              <option>Cena 20:00</option>
+              <option>Cena 21:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Numero Ospiti</label>
+          <select class="form-input" style="appearance:none;cursor:pointer">
+            <option>1 persona</option>
+            <option>2 persone</option>
+            <option>3–4 persone</option>
+            <option>5–6 persone</option>
+            <option>7+ persone</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Note (opzionale)</label>
+          <textarea class="form-input" placeholder="Allergie, occasioni speciali..."></textarea>
+        </div>
+        <button class="btn-primary" style="margin-top:.5rem;align-self:flex-start;padding:.9rem 2.2rem" onclick="alert('Richiesta inviata! Ti contatteremo a breve.')">Invia Prenotazione</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Aroma</span>
+    <span class="footer-copy">© 2026 Aroma Bistrot · Offanengo (CR)</span>
+    <div class="footer-social">
+      <a href="#">Instagram</a>
+      <a href="#">Facebook</a>
+      <a href="#">TripAdvisor</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const menuData = {
+  piatti:[
+    {name:'Tartare di Manzo',desc:'Capperi, senape in grani, tuorlo d\'uovo',price:'18',side:'l'},
+    {name:'Burrata e Pomodori',desc:'Burrata pugliese, datterini caramellati',price:'14',side:'r'},
+    {name:'Risotto allo Zafferano',desc:'Ossobuco, gremolata, Parmigiano 36 mesi',price:'22',side:'l'},
+    {name:'Tagliolini al Tartufo',desc:'Tartufo nero estivo, burro di malga',price:'24',side:'r'},
+    {name:'Guancia di Vitello',desc:'Polenta morbida, riduzione al Barolo',price:'26',side:'l'},
+    {name:'Branzino al Forno',desc:'Patate, olive taggiasche, pomodorini',price:'28',side:'r'},
+    {name:'Tiramisù della Casa',desc:'Ricetta originale, savoiardi artigianali',price:'9',side:'l'},
+    {name:'Panna Cotta al Caramello',desc:'Salsa al caramello salato, crumble',price:'8',side:'r'},
+  ],
+  cocktail:[
+    {name:'Negroni Sbagliato',desc:'Campari, Vermouth rosso, Prosecco DOC',price:'12',side:'l'},
+    {name:'Spritz Aroma',desc:'Aperol, Prosecco, arancia, rosmarino',price:'10',side:'r'},
+    {name:'Whisky Sour',desc:'Bourbon, limone, albume d\'uovo, angostura',price:'13',side:'l'},
+    {name:'Espresso Martini',desc:'Vodka, Kahlúa, espresso, schiuma di latte',price:'13',side:'r'},
+    {name:'Gin Tonic Signature',desc:'Gin botanico, tonica premium, sambuco',price:'14',side:'l'},
+    {name:'Paloma Mezcal',desc:'Mezcal, pompelmo, lime, sale di Maldon',price:'15',side:'r'},
+  ],
+  vini:[
+    {name:'Franciacorta DOCG Brut',desc:'Cà del Bosco · Millesimato 2021',price:'48',side:'l'},
+    {name:'Barolo DOCG',desc:'Marchesi di Barolo · 2019',price:'65',side:'r'},
+    {name:'Brunello di Montalcino',desc:'Banfi · Annata 2018',price:'72',side:'l'},
+    {name:'Amarone della Valpolicella',desc:'Bertani · Classico 2017',price:'68',side:'r'},
+    {name:'Vermentino di Gallura',desc:'Capichera · Vigna Ngena 2022',price:'42',side:'l'},
+    {name:'Soave Classico',desc:'Pieropan · La Rocca 2021',price:'38',side:'r'},
+  ]
+};
+
+function renderMenu(cat){
+  const items = menuData[cat];
+  const left = items.filter(i=>i.side==='l');
+  const right = items.filter(i=>i.side==='r');
+  const renderItem = i=>`
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">${i.name}</div>
+        <div class="menu-desc">${i.desc}</div>
+      </div>
+      <div class="menu-price">€${i.price}</div>
+    </div>`;
+  document.getElementById('col-left').innerHTML = left.map(renderItem).join('');
+  document.getElementById('col-right').innerHTML = right.map(renderItem).join('');
+}
+renderMenu('piatti');
+
+function switchTab(cat, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderMenu(cat);
+}
+
+// Scroll effects
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Reveal on scroll
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+function toggleMobileMenu(){
+  const nav = document.querySelector('.nav-links');
+  if(nav)nav.style.display = nav.style.display==='flex'?'none':'flex';
+}
+</script>
+</body>
+</html>
